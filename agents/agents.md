@@ -6,14 +6,23 @@
 
 ---
 
+Thes agent instructions function under the authority of the readme.md and project_charter.md documents.
+
 ## 1. Mission
 
-Build **The Lab**: a personal, data-intensive system that begins as a **training & health data platform** and expands into:
+Build **The Lab**: a data-intensive system that begins as a **training & health data platform** and expands into:
 
 1. Training / health data platform
 2. Decision-tracking system with feedback loops
 3. Personal knowledge system (retrieval + synthesis)
 4. Workflow automation to reduce real-world friction
+
+This project is a **production-grade, scalable application**. The fact that it is initially used by the founder does not relax requirements for:
+
+- Security
+- Data modeling
+- Scalability
+- Maintainability
 
 Primary objective:
 
@@ -108,6 +117,7 @@ Unless explicitly overridden via an ADR:
 Use the GitHub Issues Project board as the status system.
 
 **Board columns (in order):**
+
 1. Backlog
 2. Refined
 3. In-Progress
@@ -117,6 +127,7 @@ Use the GitHub Issues Project board as the status system.
 7. Deployed
 
 Rules:
+
 - An issue must always be in exactly **one** column.
 - Move issues immediately when state changes.
 - If a review fails, move the issue back to the appropriate implementation lane (Design/FE/BE/DevOps) and note why.
@@ -129,6 +140,7 @@ All requirements are written as:
 - **User Story** → implemented by **Tasks**
 
 Documentation source:
+
 - `docs/reqs.md` is the canonical requirements document.
 - Organize `docs/reqs.md` as an outline:
   - App
@@ -137,6 +149,7 @@ Documentation source:
         - Tasks + Completion Criteria
 
 GitHub tracking:
+
 - **Every User Story and every Task is a GitHub issue**.
 - Epic tracking may be:
   - a GitHub issue with a checklist of user stories, or
@@ -147,8 +160,8 @@ GitHub tracking:
 
 All work issues must include:
 
-1) the **User Story name** (verbatim), and  
-2) exactly one **work-type @tag** indicating the nature of the work:
+1. the **User Story name** (verbatim), and
+2. exactly one **work-type @tag** indicating the nature of the work:
 
 - `@FE` Frontend
 - `@BE` Backend
@@ -161,10 +174,12 @@ Recommended title format:
 - `@TAG — <User Story Name> — <Task Name>`
 
 Examples:
+
 - `@BE — Log a workout — Create workout + set endpoints`
 - `@FE — Log a workout — Build workout entry form`
 
 Notes:
+
 - Only the above tags are used.
 - Non-tagged agents (Planner/Reviewer/QA/Security) still work via issues, but do not introduce new work-type tags.
 
@@ -178,6 +193,7 @@ Agents work through each Epic/User Story in this order:
 4. **Frontend** (`@FE`)
 
 Quality gates:
+
 - **Reviewer** (code + architecture + OWASP/security best practices) must approve before QA.
 - **QA Specialist** validates the user experience against Acceptance Criteria and design specs.
 
