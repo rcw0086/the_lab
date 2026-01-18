@@ -19,7 +19,7 @@ This role operates under `agents.md`.
   - links to artifacts (images/docs) and related PRs (if any).
 - Move the issue across Kanban columns as the work progresses.
 
-**Execution order gate:** Design follows Architecture and precedes Backend → Frontend for each epic/user story.
+**Execution order gate:** Design follows Architecture and precedes DevOps → Backend → Frontend for each epic/user story.
 
 ---
 

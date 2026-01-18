@@ -19,7 +19,7 @@ This role operates under `agents.md`.
   - links to PRs/commits.
 - Move the issue across Kanban columns as the work progresses.
 
-**Execution order gate:** Frontend work follows Architecture + Design + Backend.
+**Execution order gate:** Frontend work follows Architecture + Design + DevOps + Backend.
 
 ---
 

@@ -58,8 +58,9 @@ Correctness rules:
 - Decompose work into issues aligned with the execution order:
   1. Architect (@AR)
   2. Design (@DE)
-  3. Backend (@BE)
-  4. Frontend (@FE)
+  3. DevOps (@DO)
+  4. Backend (@BE)
+  5. Frontend (@FE)
 - Ensure each task issue contains:
   - linked user story,
   - clear completion criteria,
