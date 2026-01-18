@@ -8,7 +8,7 @@
 ### 1. GitHub Actions Workflows
 The repository has two Claude Code-related GitHub Actions workflows configured:
 
-#### `/home/runner/work/the_lab/the_lab/.github/workflows/claude.yml`
+#### `.github/workflows/claude.yml`
 - **Purpose**: Enables interactive Claude Code assistance via `@claude` mentions
 - **Triggers**: 
   - Issue comments
@@ -22,14 +22,14 @@ The repository has two Claude Code-related GitHub Actions workflows configured:
   - Can read CI results on PRs
   - Provides interactive assistance on issues and PRs
 
-#### `/home/runner/work/the_lab/the_lab/.github/workflows/claude-code-review.yml`
+#### `.github/workflows/claude-code-review.yml`
 - **Purpose**: Automated code review on pull requests
 - **Triggers**: Pull request events (opened, synchronize, ready_for_review, reopened)
 - **Action**: `anthropics/claude-code-action@v1`
 - **Authentication**: Uses `CLAUDE_CODE_OAUTH_TOKEN` secret
 - **Features**:
   - Automatically reviews PRs
-  - Uses code-review plugin from claude-code-plugins marketplace
+  - Uses `code-review@claude-code-plugins` from `https://github.com/anthropics/claude-code.git` marketplace
   - Provides automated code review feedback
 
 ### 2. Git History
