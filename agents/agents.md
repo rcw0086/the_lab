@@ -76,6 +76,9 @@ Unless explicitly overridden via an ADR:
 ### Frontend
 
 - TypeScript
+- ReactJS
+- Component-first approach
+- Storybook for component documentation
 - Web-first (mobile-oriented UX)
 - Later: React Native for voice/mobile-first workflows
 
