@@ -189,8 +189,9 @@ Agents work through each Epic/User Story in this order:
 
 1. **Architect** (`@AR`)
 2. **Designer** (`@DE`)
-3. **Backend** (`@BE`)
-4. **Frontend** (`@FE`)
+3. **DevOps** (`@DO`)
+4. **Backend** (`@BE`)
+5. **Frontend** (`@FE`)
 
 Quality gates:
 
@@ -269,7 +270,6 @@ The specific role playbooks live in the `agents/` folder as individual files. Se
 - `agents/security_reviewer.md`
 - `agents/qa_specialist.md`
 - `agents/devops.md`
-- `agents/standard_template.md`
 
 For role-specific guidance, open the corresponding file in `agents/`.
 

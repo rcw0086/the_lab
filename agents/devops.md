@@ -17,6 +17,8 @@ This role operates under `agents.md`.
   - links to PRs/commits.
 - Move the issue across Kanban columns as the work progresses.
 
+**Execution order gate:** DevOps work follows Architecture + Design and precedes Backend → Frontend for each epic/user story.
+
 ---
 
 ## Before
