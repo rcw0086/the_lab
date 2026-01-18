@@ -1,6 +1,6 @@
 # The Lab — Agent Charter & Role Playbooks
 
-**Version:** 0.1  
+**Version:** 0.2  
 **Owner:** You  
 **Status:** Living document
 
@@ -90,7 +90,100 @@ Unless explicitly overridden via an ADR:
 
 ---
 
-## 4. Definition of Done (Applies to All Work)
+## 4. GitHub as the Source of Truth (All Agents, Including Claude Code)
+
+**Everything is documented in GitHub.** Terminal output should be minimal.
+
+### 4.1 Issue-first workflow
+
+- **Every unit of work is tracked by a GitHub Issue.**
+- All agents **must**:
+  - work from an assigned issue,
+  - keep the issue up to date with progress and decisions,
+  - link related PRs/commits,
+  - record what was verified (tests, manual checks, etc.).
+
+### 4.2 Kanban board
+
+Use the GitHub Issues Project board as the status system.
+
+**Board columns (in order):**
+1. Backlog
+2. Refined
+3. In-Progress
+4. Review
+5. QA
+6. Done
+7. Deployed
+
+Rules:
+- An issue must always be in exactly **one** column.
+- Move issues immediately when state changes.
+- If a review fails, move the issue back to the appropriate implementation lane (Design/FE/BE/DevOps) and note why.
+
+### 4.3 Requirement format and where it lives
+
+All requirements are written as:
+
+- **Epic** → implemented by **User Stories**
+- **User Story** → implemented by **Tasks**
+
+Documentation source:
+- `docs/reqs.md` is the canonical requirements document.
+- Organize `docs/reqs.md` as an outline:
+  - App
+    - Epic
+      - User Story + Acceptance Criteria
+        - Tasks + Completion Criteria
+
+GitHub tracking:
+- **Every User Story and every Task is a GitHub issue**.
+- Epic tracking may be:
+  - a GitHub issue with a checklist of user stories, or
+  - a GitHub milestone (either is acceptable),
+  - but **User Stories and Tasks are mandatory as issues**.
+
+### 4.4 Issue naming and work-type tags
+
+All work issues must include:
+
+1) the **User Story name** (verbatim), and  
+2) exactly one **work-type @tag** indicating the nature of the work:
+
+- `@FE` Frontend
+- `@BE` Backend
+- `@AR` Architecture
+- `@DE` Design
+- `@DO` DevOps
+
+Recommended title format:
+
+- `@TAG — <User Story Name> — <Task Name>`
+
+Examples:
+- `@BE — Log a workout — Create workout + set endpoints`
+- `@FE — Log a workout — Build workout entry form`
+
+Notes:
+- Only the above tags are used.
+- Non-tagged agents (Planner/Reviewer/QA/Security) still work via issues, but do not introduce new work-type tags.
+
+### 4.5 Agent lanes and execution order
+
+Agents work through each Epic/User Story in this order:
+
+1. **Architect** (`@AR`)
+2. **Designer** (`@DE`)
+3. **Backend** (`@BE`)
+4. **Frontend** (`@FE`)
+
+Quality gates:
+- **Reviewer** (code + architecture + OWASP/security best practices) must approve before QA.
+- **QA Specialist** validates the user experience against Acceptance Criteria and design specs.
+
+---
+
+## 5. Definition of Done (Applies to All Work)
 
 A task or PR is **not done** unless:
 
@@ -100,12 +193,12 @@ A task or PR is **not done** unless:
 - Tests exist (happy path + ≥1 edge case)
 - Security implications noted (even “none”)
 - Logs/observability hooks added where appropriate
-- Docs updated (README, module docs, or ADR)
+- Docs updated (README, module docs, ADRs, and/or `docs/reqs.md`)
 - Rollback considerations stated
 
 ---
 
-## 5. Cross-Agent Conventions
+## 6. Cross-Agent Conventions
 
 ### Modules
 
@@ -147,9 +240,9 @@ No cross-module reaching into internals.
 
 ---
 
-## 6. Role Playbooks
+## 7. Role Playbooks
 
-The specific role playbooks have been moved to the `agents/` folder as individual files. See:
+The specific role playbooks live in the `agents/` folder as individual files. See:
 
 - `agents/architect.md`
 - `agents/planner.md`
@@ -166,7 +259,7 @@ For role-specific guidance, open the corresponding file in `agents/`.
 
 ---
 
-## 7. Standard Agent Output Template
+## 8. Standard Agent Output Template
 
 Agents should end with:
 
@@ -176,5 +269,7 @@ Agents should end with:
 - **Risks**
 - **Next steps**
 - **Definition of Done status**
+
+**Important:** this template content should be recorded **succinctly but with sufficient detail** as a comment/update on the relevant **GitHub issue** (and PR, when applicable) — **not** as terminal chatter.
 
 ---
