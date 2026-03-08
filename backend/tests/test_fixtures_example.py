@@ -112,7 +112,8 @@ class TestConstraintValidation:
         db_session.commit()
 
         # Try to create another user with same username
-        create_user(db_session, username="duplicate")
+        # Use flush=False to defer constraint check until commit
+        create_user(db_session, username="duplicate", flush=False)
 
         with pytest.raises(IntegrityError) as exc_info:
             db_session.commit()
@@ -123,7 +124,8 @@ class TestConstraintValidation:
     def test_protein_check_constraint(self, db_session: Session) -> None:
         """Test that protein must be non-negative."""
         user = create_user(db_session)
-        create_daily(db_session, user=user, protein=-10)
+        # Use flush=False to defer constraint check until commit
+        create_daily(db_session, user=user, protein=-10, flush=False)
 
         with pytest.raises(IntegrityError) as exc_info:
             db_session.commit()
@@ -133,7 +135,8 @@ class TestConstraintValidation:
     def test_sleep_range_constraint(self, db_session: Session) -> None:
         """Test that sleep must be between 0 and 24 hours."""
         user = create_user(db_session)
-        create_daily(db_session, user=user, sleep=Decimal("25.0"))
+        # Use flush=False to defer constraint check until commit
+        create_daily(db_session, user=user, sleep=Decimal("25.0"), flush=False)
 
         with pytest.raises(IntegrityError) as exc_info:
             db_session.commit()
@@ -143,11 +146,13 @@ class TestConstraintValidation:
     def test_cycle_date_validation(self, db_session: Session) -> None:
         """Test that cycle end_date must be >= start_date."""
         user = create_user(db_session)
+        # Use flush=False to defer constraint check until commit
         create_cycle(
             db_session,
             user=user,
             start_date=date(2026, 6, 1),
             end_date=date(2026, 5, 1),  # Invalid: before start
+            flush=False,
         )
 
         with pytest.raises(IntegrityError) as exc_info:

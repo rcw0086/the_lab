@@ -119,7 +119,9 @@ def assert_relationship_count(
     related = getattr(instance, relationship)
 
     # Handle both list and query relationships
-    if hasattr(related, "count"):
+    if isinstance(related, list):
+        actual = len(related)
+    elif hasattr(related, "count"):
         actual = related.count()
     else:
         actual = len(related)
@@ -142,6 +144,8 @@ def assert_cascade_deleted(
     Raises:
         AssertionError: If record still exists
     """
+    # Expire all to ensure we get fresh data from the database
+    session.expire_all()
     record = session.get(model, record_id)
     assert (
         record is None

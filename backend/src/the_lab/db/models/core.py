@@ -72,6 +72,14 @@ class User(Base):
         doc="Account creation timestamp",
     )
 
+    # Relationships
+    dailies: Mapped[list["Daily"]] = relationship(
+        "Daily",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        doc="Daily health records for this user",
+    )
+
     __table_args__ = (UniqueConstraint("username", name="users_username_uk"),)
 
     def __repr__(self) -> str:
@@ -113,6 +121,13 @@ class Daily(Base):
         Numeric(5, 2),
         nullable=True,
         doc="Sleep duration in hours (0-24)",
+    )
+
+    # Relationships
+    user: Mapped["User"] = relationship(
+        "User",
+        back_populates="dailies",
+        doc="User this daily record belongs to",
     )
 
     __table_args__ = (

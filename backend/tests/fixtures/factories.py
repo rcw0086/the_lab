@@ -42,6 +42,7 @@ def create_user(
     session: Session,
     username: str | None = None,
     role: str | None = None,
+    flush: bool = True,
     **kwargs: Any,
 ) -> User:
     """Create a test user.
@@ -50,6 +51,7 @@ def create_user(
         session: Database session
         username: User's username (default: test_user_<timestamp>)
         role: User's role (optional)
+        flush: Whether to flush immediately (default: True)
         **kwargs: Additional fields to override
 
     Returns:
@@ -60,7 +62,8 @@ def create_user(
 
     user = User(username=username, role=role, **kwargs)
     session.add(user)
-    session.flush()  # Flush to get ID without committing
+    if flush:
+        session.flush()  # Flush to get ID without committing
     return user
 
 
@@ -70,6 +73,7 @@ def create_daily(
     date_value: date | None = None,
     protein: int | None = None,
     sleep: Decimal | None = None,
+    flush: bool = True,
     **kwargs: Any,
 ) -> Daily:
     """Create a test daily record.
@@ -80,6 +84,7 @@ def create_daily(
         date_value: Date for the daily (default: today)
         protein: Protein intake in grams
         sleep: Sleep duration in hours
+        flush: Whether to flush immediately (default: True)
         **kwargs: Additional fields to override
 
     Returns:
@@ -92,7 +97,8 @@ def create_daily(
         user_id=user.id, date=date_value, protein=protein, sleep=sleep, **kwargs
     )
     session.add(daily)
-    session.flush()
+    if flush:
+        session.flush()
     return daily
 
 
@@ -104,6 +110,7 @@ def create_cycle(
     start_date: date | None = None,
     end_date: date | None = None,
     notes: str | None = None,
+    flush: bool = True,
     **kwargs: Any,
 ) -> Cycle:
     """Create a test training cycle.
@@ -116,6 +123,7 @@ def create_cycle(
         start_date: Cycle start date
         end_date: Cycle end date
         notes: Cycle notes
+        flush: Whether to flush immediately (default: True)
         **kwargs: Additional fields to override
 
     Returns:
@@ -131,7 +139,8 @@ def create_cycle(
         **kwargs,
     )
     session.add(cycle)
-    session.flush()
+    if flush:
+        session.flush()
     return cycle
 
 
@@ -607,9 +616,16 @@ def create_complete_strength_set(
     Returns:
         Tuple of (Set, StrengthSetDetails, Movement, Implement)
     """
-    # Create catalog entities
-    movement = create_movement(session, name=movement_name)
-    implement = create_implement(session, name=implement_name)
+    # Create or get catalog entities
+    # Check if movement already exists
+    movement = session.query(Movement).filter_by(name=movement_name).first()
+    if movement is None:
+        movement = create_movement(session, name=movement_name)
+
+    # Check if implement already exists
+    implement = session.query(Implement).filter_by(name=implement_name).first()
+    if implement is None:
+        implement = create_implement(session, name=implement_name)
 
     # Create set
     set_obj = create_set(
