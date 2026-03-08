@@ -18,6 +18,21 @@ This role operates under `agents.md`.
   - links to PRs/commits.
 - Move the issue across Kanban columns as the work progresses.
 
+**CRITICAL: GitHub Status Updates**
+
+Before starting any task:
+1. Move issue to **In-Progress** using `gh project item-edit`
+2. Post a comment: "Starting work. Operating as: Backend Agent"
+
+During work:
+- Check off completion criteria **one by one** as each is completed (edit issue body)
+
+After completing work:
+1. Post completion summary comment (use standard template)
+2. Move issue to **Review**
+
+See `agents/github-workflow.md` for exact CLI commands and field IDs.
+
 **Execution order gate:** Backend work follows Architecture + Design + DevOps and precedes Frontend for each epic/user story.
 
 ---

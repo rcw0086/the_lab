@@ -42,6 +42,30 @@ Correctness rules:
   - Backlog → Refined → In-Progress → Review → QA → Done → Deployed
 - Keep the board accurate enough that the owner can check it at any time and immediately understand status.
 
+**CRITICAL: Issue Creation Workflow**
+
+When creating issues, the Planner must:
+
+1. Create the issue with `gh issue create`
+2. Add the issue to the project board with `gh project item-add`
+3. **Immediately set Status to Backlog** using `gh project item-edit`
+
+No issue should exist without a Status. See `agents/github-workflow.md` for exact CLI commands and field IDs.
+
+```bash
+# Example: Create and properly initialize an issue
+gh issue create --repo rcw0086/the_lab --title "@DO — Story — Task" --label "@DO" --body "..."
+# Note the issue number from output (e.g., #25)
+
+gh project item-add 2 --owner rcw0086 --url "https://github.com/rcw0086/the_lab/issues/25"
+
+# Get the item ID, then set to Backlog
+gh project item-list 2 --owner rcw0086 --format json
+# Find item with content.number == 25, note its id
+
+gh project item-edit --project-id PVT_kwHOALRmDc4BM53F --id ITEM_ID --field-id PVTSSF_lAHOALRmDc4BM53Fzg8DYxY --single-select-option-id 566b43d5
+```
+
 ---
 
 ## Before

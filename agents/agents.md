@@ -129,6 +129,7 @@ Use the GitHub Issues Project board as the status system.
 Rules:
 
 - An issue must always be in exactly **one** column.
+- All issues should go in the 'Backlog' upon initial creation
 - Move issues immediately when state changes.
 - If a review fails, move the issue back to the appropriate implementation lane (Design/FE/BE/DevOps) and note why.
 
@@ -197,6 +198,12 @@ Quality gates:
 
 - **Reviewer** (code + architecture + OWASP/security best practices) must approve before QA.
 - **QA Specialist** validates the user experience against Acceptance Criteria and design specs.
+
+Each agent must update the GitHub issue they are working on AS THEY WORK ON IT. When starting a task, move it to `In-Progress`. After completing a single completion condition, check it off in GitHub; checklists for completion conditions and acceptance criteria for user stories should be checked off one by one as work is completed.
+
+The QA specialist checks off the ACs on user stories as part of their final review. Other agents should be working tasks specific to their craft/discipline (FE, BE, AR, etc.)
+
+No agent tasks is complete until and unless GitHub status is updated.
 
 ---
 
@@ -270,6 +277,7 @@ The specific role playbooks live in the `agents/` folder as individual files. Se
 - `agents/security_reviewer.md`
 - `agents/qa_specialist.md`
 - `agents/devops.md`
+- `agents/github-workflow.md` — **Critical reference for GitHub CLI commands and field IDs**
 
 For role-specific guidance, open the corresponding file in `agents/`.
 
@@ -289,3 +297,58 @@ Agents should end with:
 **Important:** this template content should be recorded **succinctly but with sufficient detail** as a comment/update on the relevant **GitHub issue** (and PR, when applicable) — **not** as terminal chatter.
 
 ---
+
+# Workflow
+
+**Reference:** See `agents/github-workflow.md` for detailed CLI commands and examples.
+
+## Phase 1: Planning (Planner Agent)
+
+1. Document requirements in `docs/reqs.md` (Epic → User Story → Task hierarchy)
+2. Create GitHub issues for each User Story and Task
+3. **Immediately set Status to Backlog** for all newly created issues
+4. Add issues to the Kanban board project
+
+## Phase 2: Refinement
+
+1. Move issues from Backlog → Refined when requirements are clear
+2. Ensure completion criteria are unambiguous
+3. Verify dependencies are identified
+
+## Phase 3: Execution (AR → DE → DO → BE → FE)
+
+For each task, the assigned agent must:
+
+1. **Before starting:** Move issue to In-Progress, post start comment
+2. **During work:** Check off completion criteria one-by-one as completed
+3. **After completing:** Post completion summary, move to Review
+
+## Phase 4: Review (Code Reviewer + Security Reviewer)
+
+1. Review code against architecture, conventions, and security baseline
+2. Post review findings as issue/PR comments
+3. If approved: Move to QA
+4. If changes needed: Move back to In-Progress with notes
+
+## Phase 5: QA (QA Specialist)
+
+1. Execute test cases mapped to Acceptance Criteria
+2. Check off ACs as verified
+3. If passed: Move to Done
+4. If failed: Move back to In-Progress with repro steps
+
+## Phase 6: Deployment
+
+1. After deployment: Move to Deployed
+2. Monitor for issues
+
+---
+
+## Critical GitHub Rules
+
+- **No issue exists without a Status** — Always set Backlog on creation
+- **No work starts without In-Progress** — Move status before writing code
+- **No task completes without GitHub update** — Post summary, move status
+- **Check off items as they complete** — Not in batches at the end
+
+See `agents/github-workflow.md` for CLI commands and field IDs.
