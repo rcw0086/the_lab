@@ -50,6 +50,30 @@ uv run pytest
 uv run pytest --cov
 ```
 
+### Database Migrations
+
+```bash
+# Create a new migration
+alembic revision -m "description of changes"
+
+# Create a migration with autogenerate (after models are defined)
+alembic revision --autogenerate -m "description of changes"
+
+# Apply migrations
+alembic upgrade head
+
+# Revert last migration
+alembic downgrade -1
+
+# View current migration version
+alembic current
+
+# View migration history
+alembic history
+```
+
+**Note**: Database connection is configured via environment variables (see `.env.example`). Alembic automatically uses the application settings.
+
 ## Project Structure
 
 ```

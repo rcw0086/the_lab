@@ -80,6 +80,12 @@ ignore = [
     "PLR0913", # too many arguments
 ]
 
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = [
+    "PLR2004",  # magic value in comparison (acceptable in tests)
+    "PLC0415",  # import outside top-level (acceptable in tests)
+]
+
 [tool.ruff.lint.isort]
 known-first-party = ["the_lab"]
 

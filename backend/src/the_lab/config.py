@@ -49,7 +49,7 @@ class Settings(BaseSettings):
         )
 
     # JWT Authentication
-    jwt_secret_key: str = "change-me-in-production"
+    jwt_secret_key: str  # REQUIRED - must be set via JWT_SECRET_KEY environment variable
     jwt_algorithm: str = "HS256"
     jwt_access_token_expire_minutes: int = 30
     jwt_refresh_token_expire_days: int = 7

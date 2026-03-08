@@ -184,6 +184,45 @@ docker compose down -v
 - Email: `admin@localhost.com`
 - Password: `admin`
 
+#### Database Migrations
+
+```bash
+cd backend
+
+# Run all pending migrations
+uv run alembic upgrade head
+
+# Create a new migration (after model changes)
+uv run alembic revision --autogenerate -m "Description"
+
+# Rollback one migration
+uv run alembic downgrade -1
+
+# View migration history
+uv run alembic history
+```
+
+#### Seed Development Data
+
+```bash
+cd backend
+
+# Seed database with sample data
+uv run python scripts/seed_db.py
+
+# Clear and re-seed database
+uv run python scripts/seed_db.py --reset
+```
+
+The seed script creates:
+- 2 users (athlete and coach)
+- 12 movements, 8 implements, 11 variations
+- 2 training sessions with modules and sets
+- 3 goals, 2 cycles, 2 injuries
+- 3 journal notes, 7 days of daily tracking
+
+See [backend/scripts/README.md](backend/scripts/README.md) for details.
+
 ---
 
 ## Documentation
