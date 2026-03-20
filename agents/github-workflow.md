@@ -114,18 +114,42 @@ EOF
 
 ---
 
+## Kanban Progression
+
+Tickets must progress through kanban lanes in real-time as work happens. Update the status **as you enter each phase**, not retroactively.
+
+| Phase | Status | Trigger |
+|-------|--------|---------|
+| Pick up ticket | **In-Progress** | Before writing any code |
+| Code complete, PR opened | **Review** | After pushing branch and creating PR |
+| PR approved / tests green | **QA** | After PR is ready for final validation |
+| PR merged to main | **Done** | Only after merge is confirmed |
+
+### Acceptance Criteria Progression
+
+Check off acceptance criteria **one by one** as each passes testing — not all at once. After verifying each criterion (e.g., running the relevant test), update the issue body to check that single item. This provides a live audit trail of progress.
+
+```bash
+# After each criterion passes, edit the issue body to check it off
+gh issue view NUMBER --json body --jq '.body'
+# Update the single [ ] → [x] for the criterion that just passed
+gh issue edit NUMBER --body "UPDATED_BODY"
+```
+
+---
+
 ## Workflow Checklist for Agents
 
 ### Before Starting Any Work
 
 - [ ] Identify the GitHub issue to work on
 - [ ] Verify issue is in Refined or assigned to you
-- [ ] Move issue to In-Progress
+- [ ] Move issue to **In-Progress**
 - [ ] Post comment: "Starting work. Operating as: [Role]"
 
 ### During Work
 
-- [ ] Check off completion criteria as each is met (edit issue body)
+- [ ] Check off completion criteria **one by one** as each is met (edit issue body)
 - [ ] Post progress comments for significant milestones
 - [ ] Link commits/PRs to the issue
 
@@ -133,8 +157,10 @@ EOF
 
 - [ ] Verify all completion criteria are checked
 - [ ] Post completion summary comment (use template above)
-- [ ] Move issue to Review
-- [ ] Ensure PR references the issue number
+- [ ] Move issue to **Review**
+- [ ] Create PR referencing the issue number (`Closes #N`)
+- [ ] After PR approval, move to **QA**
+- [ ] After PR merge, move to **Done**
 
 ### Never Do
 
@@ -142,6 +168,8 @@ EOF
 - ❌ Start coding without moving issue to In-Progress
 - ❌ Complete work without posting summary to GitHub
 - ❌ Consider a task "done" if GitHub isn't updated
+- ❌ Move a ticket to Done before the PR is merged
+- ❌ Check off all acceptance criteria at once — verify and check each individually
 
 ---
 
