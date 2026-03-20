@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from the_lab.config import get_settings
 from the_lab.logging import get_logger, setup_logging
+from the_lab.middleware import RequestLoggingMiddleware
 
 
 @asynccontextmanager
@@ -40,6 +41,7 @@ def create_app() -> FastAPI:
         lifespan=lifespan,
     )
 
+    app.add_middleware(RequestLoggingMiddleware)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.cors_origins,
