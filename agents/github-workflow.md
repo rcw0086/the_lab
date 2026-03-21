@@ -121,8 +121,8 @@ Tickets must progress through kanban lanes in real-time as work happens. Update 
 | Phase | Status | Trigger |
 |-------|--------|---------|
 | Pick up ticket | **In-Progress** | Before writing any code |
-| Code complete, PR opened | **Review** | After pushing branch and creating PR |
-| PR approved / tests green | **QA** | After PR is ready for final validation |
+| Code complete | **QA** | After code is ready for validation |
+| ACs verified and checked off | **Review** | After QA passes, open PR |
 | PR merged to main | **Done** | Only after merge is confirmed |
 
 ### Acceptance Criteria Progression
@@ -155,11 +155,11 @@ gh issue edit NUMBER --body "UPDATED_BODY"
 
 ### After Completing Work
 
-- [ ] Verify all completion criteria are checked
+- [ ] Move issue to **QA**
+- [ ] Verify each completion criterion and check it off on the issue as it passes
 - [ ] Post completion summary comment (use template above)
+- [ ] After all ACs pass QA, create PR referencing the issue number (`Closes #N`)
 - [ ] Move issue to **Review**
-- [ ] Create PR referencing the issue number (`Closes #N`)
-- [ ] After PR approval, move to **QA**
 - [ ] After PR merge, move to **Done**
 
 ### Never Do
@@ -170,6 +170,7 @@ gh issue edit NUMBER --body "UPDATED_BODY"
 - ❌ Consider a task "done" if GitHub isn't updated
 - ❌ Move a ticket to Done before the PR is merged
 - ❌ Check off all acceptance criteria at once — verify and check each individually
+- ❌ Open a PR before QA — ACs must be checked off on the issue first, then the PR is created
 
 ---
 
