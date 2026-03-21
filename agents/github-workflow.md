@@ -27,9 +27,9 @@ This document provides explicit instructions for Claude Code to interact with Gi
 | Backlog | Initial creation; not yet ready for work |
 | Refined | Requirements clear; ready to be picked up |
 | In-Progress | Actively being worked on |
-| Review | Code complete; awaiting review |
-| QA | Review passed; awaiting QA validation |
-| Done | All acceptance criteria verified |
+| Review | Code complete; code_reviewer and security_reviewer agents review the work |
+| QA | Reviews passed; ACs verified and checked off, then PR opened |
+| Done | PR merged to main |
 | Deployed | Released to production |
 
 ---
@@ -74,11 +74,11 @@ Update the issue body to check off completed items:
 gh issue edit NUMBER --repo rcw0086/the_lab --body "UPDATED_BODY_WITH_CHECKED_ITEMS"
 ```
 
-### When Work is Complete
+### When Code is Complete
 
-1. Move to Review status
+1. Move to **Review** status
 2. Post completion summary as comment
-3. Link any PRs
+3. The **code_reviewer** and **security_reviewer** agents review the work
 
 ```bash
 # Move to Review
@@ -100,16 +100,23 @@ gh issue comment NUMBER --repo rcw0086/the_lab --body "$(cat <<'EOF'
 **Risks:**
 - [Known risks or "None identified"]
 
-**Definition of Done status:**
-- [x] Scope documented
-- [x] Tests exist
-- [x] Docs updated
-- etc.
-
 **Next steps:**
-- Move to QA for validation
+- Move to Review for code_reviewer and security_reviewer
 EOF
 )"
+```
+
+### When Reviews Pass
+
+1. Move to **QA** status
+2. Verify each acceptance criterion and check it off on the issue
+3. After all ACs pass, open the PR
+
+```bash
+# Move to QA
+gh project item-edit --project-id PVT_kwHOALRmDc4BM53F --id ITEM_ID --field-id PVTSSF_lAHOALRmDc4BM53Fzg8DYxY --single-select-option-id QA_OPTION_ID
+
+# Verify and check off ACs one by one, then open PR
 ```
 
 ---
@@ -121,8 +128,8 @@ Tickets must progress through kanban lanes in real-time as work happens. Update 
 | Phase | Status | Trigger |
 |-------|--------|---------|
 | Pick up ticket | **In-Progress** | Before writing any code |
-| Code complete | **QA** | After code is ready for validation |
-| ACs verified and checked off | **Review** | After QA passes, open PR |
+| Code complete | **Review** | code_reviewer and security_reviewer agents review |
+| Reviews pass | **QA** | Verify ACs, check them off, then open PR |
 | PR merged to main | **Done** | Only after merge is confirmed |
 
 ### Acceptance Criteria Progression
@@ -153,13 +160,14 @@ gh issue edit NUMBER --body "UPDATED_BODY"
 - [ ] Post progress comments for significant milestones
 - [ ] Link commits/PRs to the issue
 
-### After Completing Work
+### After Completing Code
 
-- [ ] Move issue to **QA**
-- [ ] Verify each completion criterion and check it off on the issue as it passes
 - [ ] Post completion summary comment (use template above)
-- [ ] After all ACs pass QA, create PR referencing the issue number (`Closes #N`)
 - [ ] Move issue to **Review**
+- [ ] code_reviewer and security_reviewer agents review the work
+- [ ] After reviews pass, move issue to **QA**
+- [ ] Verify each acceptance criterion and check it off on the issue as it passes
+- [ ] After all ACs pass, create PR referencing the issue number (`Closes #N`)
 - [ ] After PR merge, move to **Done**
 
 ### Never Do
@@ -170,7 +178,8 @@ gh issue edit NUMBER --body "UPDATED_BODY"
 - ❌ Consider a task "done" if GitHub isn't updated
 - ❌ Move a ticket to Done before the PR is merged
 - ❌ Check off all acceptance criteria at once — verify and check each individually
-- ❌ Open a PR before QA — ACs must be checked off on the issue first, then the PR is created
+- ❌ Open a PR before QA — ACs must be checked off on the issue during QA, then the PR is created
+- ❌ Skip Review — code_reviewer and security_reviewer agents must review before moving to QA
 
 ---
 
@@ -225,10 +234,13 @@ gh issue edit 8 --repo rcw0086/the_lab --body "UPDATED_BODY"
 # Post completion summary
 gh issue comment 8 --repo rcw0086/the_lab --body "## Completion Summary ..."
 
-# Move to Review
+# Move to Review — code_reviewer and security_reviewer agents review
 gh project item-edit --project-id PVT_kwHOALRmDc4BM53F --id PVTI_xxx --field-id PVTSSF_lAHOALRmDc4BM53Fzg8DYxY --single-select-option-id 0a9b80ca
 
-# After QA passes, move to Done
+# After reviews pass, move to QA — verify ACs, check them off, open PR
+gh project item-edit --project-id PVT_kwHOALRmDc4BM53F --id PVTI_xxx --field-id PVTSSF_lAHOALRmDc4BM53Fzg8DYxY --single-select-option-id ca5048d6
+
+# After PR merge, move to Done
 gh project item-edit --project-id PVT_kwHOALRmDc4BM53F --id PVTI_xxx --field-id PVTSSF_lAHOALRmDc4BM53Fzg8DYxY --single-select-option-id f2abef06
 ```
 
