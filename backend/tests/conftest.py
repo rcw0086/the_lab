@@ -8,6 +8,15 @@ This module provides common fixtures used across test modules, including:
 """
 
 import os
+
+# Override settings to use test database BEFORE importing anything from the_lab
+# (the_lab.db.__init__ triggers get_settings() at import time via session.py)
+os.environ["POSTGRES_DB"] = "the_lab_test"
+# Set JWT secret key for tests (required field as of security fix)
+os.environ["JWT_SECRET_KEY"] = os.environ.get(
+    "JWT_SECRET_KEY", "test-jwt-secret-key-at-least-32-characters-long-for-testing"
+)
+
 from collections.abc import Generator
 from typing import Any
 
@@ -17,11 +26,6 @@ from sqlalchemy.engine import Engine
 from sqlalchemy.orm import Session, sessionmaker
 
 from the_lab.db.base import Base
-
-# Override settings to use test database BEFORE importing settings
-os.environ["POSTGRES_DB"] = "the_lab_test"
-# Set JWT secret key for tests (required field as of security fix)
-os.environ["JWT_SECRET_KEY"] = "test-jwt-secret-key-at-least-32-characters-long-for-testing"
 
 from tests.test_settings import get_test_settings
 
