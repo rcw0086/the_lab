@@ -267,7 +267,7 @@ class TestRelationships:
 @pytest.fixture
 def test_user(db_session: DBSession) -> User:
     """Create a test user."""
-    user = User(username="test_user")
+    user = User(username="test_user", password_hash="$2b$12$testhashtesthashtesthashtesthashtesthashtesthashte")
     db_session.add(user)
     db_session.commit()
     return user

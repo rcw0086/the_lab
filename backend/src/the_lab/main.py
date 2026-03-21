@@ -9,6 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from sqlalchemy import text
 
+from the_lab.auth.router import router as auth_router
 from the_lab.config import get_settings
 from the_lab.db.session import engine
 from the_lab.logging import get_logger, setup_logging
@@ -53,6 +54,8 @@ def create_app() -> FastAPI:
         allow_methods=settings.cors_allow_methods,
         allow_headers=settings.cors_allow_headers,
     )
+
+    app.include_router(auth_router)
 
     @app.get("/")
     async def root() -> dict[str, str]:

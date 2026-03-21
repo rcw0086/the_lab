@@ -38,10 +38,14 @@ from the_lab.db.models.sets import (
 # ============================================================
 
 
+_TEST_PASSWORD_HASH = "$2b$12$testhashtesthashtesthashtesthashtesthashtesthashte"
+
+
 def create_user(
     session: Session,
     username: str | None = None,
     role: str | None = None,
+    password_hash: str | None = None,
     flush: bool = True,
     **kwargs: Any,
 ) -> User:
@@ -51,6 +55,7 @@ def create_user(
         session: Database session
         username: User's username (default: test_user_<timestamp>)
         role: User's role (optional)
+        password_hash: Bcrypt hash (default: test placeholder)
         flush: Whether to flush immediately (default: True)
         **kwargs: Additional fields to override
 
@@ -60,7 +65,12 @@ def create_user(
     if username is None:
         username = f"test_user_{datetime.now().timestamp()}"
 
-    user = User(username=username, role=role, **kwargs)
+    user = User(
+        username=username,
+        role=role,
+        password_hash=password_hash or _TEST_PASSWORD_HASH,
+        **kwargs,
+    )
     session.add(user)
     if flush:
         session.flush()  # Flush to get ID without committing
