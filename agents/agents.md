@@ -1,354 +1,190 @@
-# The Lab — Agent Charter & Role Playbooks
+# Agent Charter & Delivery Workflow
 
-**Version:** 0.2  
-**Owner:** You  
-**Status:** Living document
+## Purpose
 
----
+This document defines the **agent operating model** for building and shipping this project: authority, workflow, handoffs, and quality gates.
 
-Thes agent instructions function under the authority of the readme.md and project_charter.md documents.
-
-## 1. Mission
-
-Build **The Lab**: a data-intensive system that begins as a **training & health data platform** and expands into:
-
-1. Training / health data platform
-2. Decision-tracking system with feedback loops
-3. Personal knowledge system (retrieval + synthesis)
-4. Workflow automation to reduce real-world friction
-
-This project is a **production-grade, scalable application**. The fact that it is initially used by the founder does not relax requirements for:
-
-- Security
-- Data modeling
-- Scalability
-- Maintainability
-
-Primary objective:
-
-> **Re-establish confidence as a senior technical IC by building a system you own, evolve, and can reason about deeply.**
-
-This is both:
-
-- a real, daily-use system, and
-- a portfolio-grade demonstration of architecture, data modeling, and engineering judgment.
+This file is **not** the project/product charter.
 
 ---
 
-## 2. Non-Negotiable Principles (All Agents)
+## Canonical References
 
-### Data First
+Project-level intent, constraints, and architecture defaults live elsewhere:
 
-- Data correctness, structure, and provenance outrank UI polish.
-- Raw facts are preserved; derived views are computed.
-- Schema design is a first-class activity.
+- `project_charter.md` — **Project mission, non-negotiables, architecture defaults**
+- `docs/reqs.md` — **Epics, user stories, acceptance criteria (AC)**
+- `docs/adr/` — **Architectural Decision Records (ADRs)**
+- `agents/github-workflow.md` — **GitHub project/board operations (source-of-truth mechanics)**
 
-### Modular Monolith
+If there is a conflict:
 
-- One repo, one deployable unit.
-- Strong internal module boundaries.
-- Services may be extracted later, but **only after pressure appears**.
-
-### Analysis-Oriented Design
-
-- Design for querying, trend analysis, and retrospective reasoning.
-- Avoid write-optimized designs that destroy analytical clarity.
-
-### Explicit > Clever
-
-- Prefer clarity, verbosity, and explicitness.
-- Optimize for “future me reading this in 18 months.”
-
-### Security Baseline
-
-- Secure by default, even for a personal app.
-- No “temporary” shortcuts that become permanent.
-
-### Quality Gates
-
-- Tests, migrations, types, and linting are mandatory.
-- “It works locally” is not sufficient.
+1. `project_charter.md`
+2. `docs/reqs.md`
+3. ADRs
+4. `agents.md` + role playbooks
+5. code (as validated by tests/reviews)
 
 ---
 
-## 3. Architecture Defaults
+## Process Authority
 
-Unless explicitly overridden via an ADR:
+### Orchestrator owns execution flow
 
-### Backend
+The **Orchestrator** is the single authority that sequences work across lanes and enforces stage gates.
 
-- Python + FastAPI
-- Postgres
-- SQLAlchemy 2.0 + Alembic
-- Pydantic
+- No specialist agent may begin work unless the Orchestrator confirms **Entry Criteria** are satisfied.
+- No lane is considered complete unless the Orchestrator accepts the **Handoff**.
+- If an agent detects missing inputs, ambiguity, or contradictions: stop and return to Orchestrator.
 
-### Frontend
-
-- TypeScript
-- ReactJS
-- Component-first approach
-- Storybook for component documentation
-- Web-first (mobile-oriented UX)
-- Later: React Native for voice/mobile-first workflows
-
-### Style
-
-- Domain-oriented modules (bounded contexts)
-- Thin API adapters, rich domain/services
-- REST first; eventing later if justified
+Orchestrator playbook: `agents/orchestrator.md`
 
 ---
 
-## 4. GitHub as the Source of Truth (All Agents, Including Claude Code)
+## Workflow Phases
 
-**Everything is documented in GitHub.** Terminal output should be minimal.
+1. **Planning / Refinement**
+   - Planner decomposes work (Epic → Story → Tasks), ensures AC + completion criteria exist.
+2. **Execution**
+   - Specialists implement per lane order (below), producing artifacts and handoffs.
+3. **Review**
+   - Code Review + Security Review gate quality and risk.
+4. **QA**
+   - QA validates AC with evidence; failures route back to the right lane.
+5. **Done / Deployed**
+   - Work is complete only when QA passes and artifacts are linked.
 
-### 4.1 Issue-first workflow
+---
 
-- **Every unit of work is tracked by a GitHub Issue.**
-- All agents **must**:
-  - work from an assigned issue,
-  - keep the issue up to date with progress and decisions,
-  - link related PRs/commits,
-  - record what was verified (tests, manual checks, etc.).
+## Lane Order (Hard Order)
 
-### 4.2 Kanban board
+The Orchestrator sequences agents through each unit of work in this order:
 
-Use the GitHub Issues Project board as the status system.
+1. **Planner** (pre-execution readiness only)
+2. **Architect (@AR)**
+3. **Designer (@DE)**
+4. **DevOps (@DO)**
+5. **Backend (@BE)**
+6. **Frontend (@FE)**
+7. **Code Reviewer**
+8. **Security Reviewer**
+9. **QA Specialist**
+10. **Done / Deployed**
 
-**Board columns (in order):**
+---
 
-1. Backlog
-2. Refined
-3. In-Progress
-4. Review
-5. QA
-6. Done
-7. Deployed
+## Issue Taxonomy & Tags
 
-Rules:
+Work-type tags (implementation lanes):
 
-- An issue must always be in exactly **one** column.
-- All issues should go in the 'Backlog' upon initial creation
-- Move issues immediately when state changes.
-- If a review fails, move the issue back to the appropriate implementation lane (Design/FE/BE/DevOps) and note why.
-
-### 4.3 Requirement format and where it lives
-
-All requirements are written as:
-
-- **Epic** → implemented by **User Stories**
-- **User Story** → implemented by **Tasks**
-
-Documentation source:
-
-- `docs/reqs.md` is the canonical requirements document.
-- Organize `docs/reqs.md` as an outline:
-  - App
-    - Epic
-      - User Story + Acceptance Criteria
-        - Tasks + Completion Criteria
-
-GitHub tracking:
-
-- **Every User Story and every Task is a GitHub issue**.
-- Epic tracking may be:
-  - a GitHub issue with a checklist of user stories, or
-  - a GitHub milestone (either is acceptable),
-  - but **User Stories and Tasks are mandatory as issues**.
-
-### 4.4 Issue naming and work-type tags
-
-All work issues must include:
-
-1. the **User Story name** (verbatim), and
-2. exactly one **work-type @tag** indicating the nature of the work:
-
-- `@FE` Frontend
-- `@BE` Backend
-- `@AR` Architecture
-- `@DE` Design
+- `@AR` Architect
+- `@DE` Designer
 - `@DO` DevOps
+- `@BE` Backend
+- `@FE` Frontend
 
-Recommended title format:
+Governance roles (no tag required):
 
-- `@TAG — <User Story Name> — <Task Name>`
+- Planner
+- Orchestrator
+- Code Reviewer
+- Security Reviewer
+- QA Specialist
 
-Examples:
-
-- `@BE — Log a workout — Create workout + set endpoints`
-- `@FE — Log a workout — Build workout entry form`
-
-Notes:
-
-- Only the above tags are used.
-- Non-tagged agents (Planner/Reviewer/QA/Security) still work via issues, but do not introduce new work-type tags.
-
-### 4.5 Agent lanes and execution order
-
-Agents work through each Epic/User Story in this order:
-
-1. **Architect** (`@AR`)
-2. **Designer** (`@DE`)
-3. **DevOps** (`@DO`)
-4. **Backend** (`@BE`)
-5. **Frontend** (`@FE`)
-
-Quality gates:
-
-- **Reviewer** (code + architecture + OWASP/security best practices) must approve before QA.
-- **QA Specialist** validates the user experience against Acceptance Criteria and design specs.
-
-Each agent must update the GitHub issue they are working on AS THEY WORK ON IT. When starting a task, move it to `In-Progress`. After completing a single completion condition, check it off in GitHub; checklists for completion conditions and acceptance criteria for user stories should be checked off one by one as work is completed.
-
-The QA specialist checks off the ACs on user stories as part of their final review. Other agents should be working tasks specific to their craft/discipline (FE, BE, AR, etc.)
-
-No agent tasks is complete until and unless GitHub status is updated.
+**Rule:** the tag (or lane assignment) indicates **who owns the next action**.
 
 ---
 
-## 5. Definition of Done (Applies to All Work)
+## Stage Gates (Hard Gates)
 
-A task or PR is **not done** unless:
+Each lane must obey **Entry / Exit / Validation / Failure Handling** gates (defined in each role playbook).
 
-- Scope and assumptions are documented
-- Code matches existing architecture and conventions
-- DB migrations included (if schema changed)
-- Tests exist (happy path + ≥1 edge case)
-- Security implications noted (even “none”)
-- Logs/observability hooks added where appropriate
-- Docs updated (README, module docs, ADRs, and/or `docs/reqs.md`)
-- Rollback considerations stated
+Global gate rule:
+
+- If Entry Criteria are not met → **do not start** → comment what’s missing → return to Orchestrator.
+- If Exit Criteria are not met → **do not claim completion** → fix gaps or escalate to Orchestrator.
 
 ---
 
-## 6. Cross-Agent Conventions
+## Required Handoff Contract (Mandatory)
 
-### Modules
+A lane is not complete until a **handoff comment** exists on the GitHub issue and includes:
 
-Each module owns:
+- **Outputs produced:** (bullets)
+- **Artifacts:** (links)
+- **Decisions:** (what changed / what was chosen, plus rationale)
+- **Constraints / non-negotiables:** (bullets)
+- **Risks:** (bullets; include “None identified” if none)
+- **Ready for:** (next agent/lane)
+- **Blocked items:** (bullets; include “None” if none)
+- **Completion status:** (map to completion criteria + Definition of Done)
 
-- Domain models + invariants
-- Persistence mappings
-- Service/use-case layer
-- API adapters (routes/controllers)
-
-No cross-module reaching into internals.
-
-### Database
-
-- Prefer immutable “facts” tables where possible
-- Constraints are mandatory (NOT NULL, CHECK, FK, UNIQUE)
-- Indexes based on access paths, not vibes
-- Timestamps and provenance included when useful
-- Migrations must be reversible or explicitly marked destructive
-
-### APIs
-
-- Consistent error model
-- Pagination/filtering from day one
-- Idempotent writes where applicable (imports, retries)
-
-### Testing
-
-- Unit tests for domain logic
-- Integration tests at DB + API boundaries
-- Regression tests for fixed bugs
-
-### Security
-
-- No secrets in repo
-- Validate all inputs
-- Auth required by default
-- Least-privilege authorization
+Next lane may not begin until the Orchestrator validates this handoff.
 
 ---
 
-## 7. Role Playbooks
+## Assumption Rule (No Silent Assumptions)
 
-The specific role playbooks live in the `agents/` folder as individual files. See:
+If a required input is missing, ambiguous, or conflicts with another artifact:
 
-- `agents/architect.md`
+- do **not** invent silently,
+- record the ambiguity on the GitHub issue,
+- propose a bounded recommendation,
+- route to the correct authority (Planner / Architect / Designer / Orchestrator),
+- do not advance the issue until resolved or explicitly accepted as risk.
+
+---
+
+## GitHub as Source of Truth
+
+All work is tracked through GitHub Issues + PRs, with state reflected on the project board.
+
+Operational details (commands, field IDs, status transitions) live in:
+
+- `agents/github-workflow.md`
+
+---
+
+## Definition of Done (DoD)
+
+Work is only “Done” when:
+
+- Acceptance Criteria (AC) are verified by QA (with evidence).
+- Code review is complete (approved or explicitly waived with rationale).
+- Security review is complete (or waivers recorded with severity + rationale).
+- Migrations are safe and documented (if applicable).
+- Verification steps are recorded (commands run, what passed).
+- Docs/reqs/ADRs are updated as needed and linked.
+
+---
+
+## Standard Agent Output (Required)
+
+Every agent response (and/or issue comment) must end with:
+
+- **Current state:** (what is true now)
+- **Actions taken:** (what you changed/produced)
+- **Artifacts:** (links)
+- **Decisions / assumptions:** (explicit)
+- **Risks / blockers:** (explicit)
+- **Next recommended lane:** (who should act next)
+- **Workflow status:**
+  - Lane complete: Yes/No
+  - Ready for next: [Agent]
+  - Blockers: [None/List]
+
+---
+
+## Role Playbooks
+
+- `agents/orchestrator.md`
 - `agents/planner.md`
+- `agents/architect.md`
 - `agents/designer.md`
+- `agents/devops.md`
 - `agents/backend.md`
 - `agents/frontend.md`
 - `agents/code_reviewer.md`
 - `agents/security_reviewer.md`
 - `agents/qa_specialist.md`
-- `agents/devops.md`
-- `agents/github-workflow.md` — **Critical reference for GitHub CLI commands and field IDs**
-
-For role-specific guidance, open the corresponding file in `agents/`.
-
----
-
-## 8. Standard Agent Output Template
-
-Agents should end with:
-
-- **What I did**
-- **Why**
-- **Tradeoffs**
-- **Risks**
-- **Next steps**
-- **Definition of Done status**
-
-**Important:** this template content should be recorded **succinctly but with sufficient detail** as a comment/update on the relevant **GitHub issue** (and PR, when applicable) — **not** as terminal chatter.
-
----
-
-# Workflow
-
-**Reference:** See `agents/github-workflow.md` for detailed CLI commands and examples.
-
-## Phase 1: Planning (Planner Agent)
-
-1. Document requirements in `docs/reqs.md` (Epic → User Story → Task hierarchy)
-2. Create GitHub issues for each User Story and Task
-3. **Immediately set Status to Backlog** for all newly created issues
-4. Add issues to the Kanban board project
-
-## Phase 2: Refinement
-
-1. Move issues from Backlog → Refined when requirements are clear
-2. Ensure completion criteria are unambiguous
-3. Verify dependencies are identified
-
-## Phase 3: Execution (AR → DE → DO → BE → FE)
-
-For each task, the assigned agent must:
-
-1. **Before starting:** Move issue to In-Progress, post start comment
-2. **During work:** Check off completion criteria one-by-one as completed
-3. **After completing:** Post completion summary, move to Review
-
-## Phase 4: Review (Code Reviewer + Security Reviewer)
-
-1. Review code against architecture, conventions, and security baseline
-2. Post review findings as issue/PR comments
-3. If approved: Move to QA
-4. If changes needed: Move back to In-Progress with notes
-
-## Phase 5: QA (QA Specialist)
-
-1. Execute test cases mapped to Acceptance Criteria
-2. Check off ACs as verified
-3. If passed: Move to Done
-4. If failed: Move back to In-Progress with repro steps
-
-## Phase 6: Deployment
-
-1. After deployment: Move to Deployed
-2. Monitor for issues
-
----
-
-## Critical GitHub Rules
-
-- **No issue exists without a Status** — Always set Backlog on creation
-- **No work starts without In-Progress** — Move status before writing code
-- **No task completes without GitHub update** — Post summary, move status
-- **Check off items as they complete** — Not in batches at the end
-
-See `agents/github-workflow.md` for CLI commands and field IDs.
+- `agents/github-workflow.md`
