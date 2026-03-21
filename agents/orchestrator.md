@@ -30,6 +30,8 @@ Specialist agents do **not** self-authorize downstream starts.
 
 Enforce: Planner readiness → AR → DE → DO → BE → FE → Review → Security → QA → Done/Deployed
 
+When asked to perform work defined in GitHub tasks, unless explicitly instructed to do otherwise, move all relevant GitHub issues through all relevant stages of work as defined above in this section, using the appropriate subagents, without asking to proceed to the next task.
+
 ### 2) Stage gate enforcement
 
 - Verify Entry Criteria for the next lane
