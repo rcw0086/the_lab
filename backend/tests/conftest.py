@@ -165,7 +165,7 @@ def db_session(setup_test_database: None) -> Generator[Session, None, None]:
 
     Usage:
         def test_something(db_session: Session):
-            user = User(username="test")
+            user = User(username="test", password_hash="$2b$12$testhashtesthashtesthashtesthashtesthashtesthashte")
             db_session.add(user)
             db_session.commit()
             # Changes are rolled back after test
@@ -221,7 +221,7 @@ def test_user(db_session: Session) -> Any:
     """
     from the_lab.db.models.core import User
 
-    user = User(username="test_user")
+    user = User(username="test_user", password_hash="$2b$12$fakehashfortest000000000000000000000000000000000000000")
     db_session.add(user)
     db_session.commit()
     return user

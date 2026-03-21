@@ -22,7 +22,7 @@ class TestUser:
 
     def test_create_user(self, db_session: Session) -> None:
         """Test creating a user with required fields."""
-        user = User(username="test_user")
+        user = User(username="test_user", password_hash="$2b$12$testhashtesthashtesthashtesthashtesthashtesthashte")
         db_session.add(user)
         db_session.commit()
 
@@ -33,18 +33,18 @@ class TestUser:
 
     def test_username_unique_constraint(self, db_session: Session) -> None:
         """Test that username must be unique."""
-        user1 = User(username="duplicate")
+        user1 = User(username="duplicate", password_hash="$2b$12$testhashtesthashtesthashtesthashtesthashtesthashte")
         db_session.add(user1)
         db_session.commit()
 
-        user2 = User(username="duplicate")
+        user2 = User(username="duplicate", password_hash="$2b$12$testhashtesthashtesthashtesthashtesthashtesthashte")
         db_session.add(user2)
         with pytest.raises(IntegrityError):
             db_session.commit()
 
     def test_user_with_role(self, db_session: Session) -> None:
         """Test creating user with role."""
-        user = User(username="admin_user", role="admin")
+        user = User(username="admin_user", password_hash="$2b$12$testhashtesthashtesthashtesthashtesthashtesthashte", role="admin")
         db_session.add(user)
         db_session.commit()
 
@@ -281,7 +281,7 @@ class TestRelationships:
 @pytest.fixture
 def test_user(db_session: Session) -> User:
     """Create a test user."""
-    user = User(username="test_user")
+    user = User(username="test_user", password_hash="$2b$12$testhashtesthashtesthashtesthashtesthashtesthashte")
     db_session.add(user)
     db_session.commit()
     return user

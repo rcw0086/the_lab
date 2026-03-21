@@ -60,6 +60,11 @@ class User(Base):
         nullable=False,
         doc="Unique username for authentication",
     )
+    password_hash: Mapped[str] = mapped_column(
+        String(128),
+        nullable=False,
+        doc="Bcrypt password hash",
+    )
     role: Mapped[str | None] = mapped_column(
         String(64),
         nullable=True,
