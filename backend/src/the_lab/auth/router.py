@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
+from the_lab.auth.dependencies import get_current_user
 from the_lab.auth.jwt import create_access_token, create_refresh_token
 from the_lab.auth.password import hash_password, verify_password
 from the_lab.db.models.core import User
@@ -68,3 +69,9 @@ def login(payload: LoginRequest, db: Session = Depends(get_db)) -> TokenResponse
     access_token = create_access_token(user.id, user.username, user.role)
     refresh_token = create_refresh_token(user.id)
     return TokenResponse(access_token=access_token, refresh_token=refresh_token)
+
+
+@router.get("/me", response_model=UserRead)
+def get_me(current_user: User = Depends(get_current_user)) -> User:
+    """Return the currently authenticated user."""
+    return current_user
